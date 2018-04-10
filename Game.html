@@ -31,7 +31,7 @@
     var rightPressed = false;
 
     var brickRowCount = 4;
-    var brickColumnCount = 8;
+    var brickColumnCount = 9;
     var brickWidth = 75;
     var brickHeight = 20;
     var brickPadding = 10;
@@ -66,10 +66,24 @@
             leftPressed = false;
         }
     }
+    function collisionDetection(){
+        for(i=0; i<brickColumnCount; i++){
+            for(j=0; j<brickRowCount; j++){
+                var b = bricks[i][j];
+                if(b.status == 1) {
+                    if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+                        dy = -dy;
+                        b.status = 0;
+                    }
+
+            }
+        }
+    }
+    }
     function drawBricks() {
         for(i=0; i<brickColumnCount; i++) {
             for(j=0; j<brickRowCount; j++) {
-                if(bricks.status = 1){
+                if(bricks[i][j].status == 1){
                 var brickX = (i*(brickWidth+brickPadding))+brickOffsetLeft;
                 var brickY = (j*(brickHeight+brickPadding))+brickOffsetTop;
                 bricks[i][j].x = brickX;
@@ -84,6 +98,7 @@
         }
     }
 
+    
     function drawBall(){
 
      ctx.beginPath();
@@ -101,27 +116,14 @@
         ctx.fill();
         ctx.closePath();
     }
-    function collisionDetection() {
-    for(i=0; i<brickColumnCount; i++) {
-        for(j=0; j<brickRowCount; j++) {
-            var b = bricks[i][j];
-            if(b.status == 1) {
-                if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
-                    dy = -dy;
-                    b.status = 0;
-                }
-            }
-        }
-    }
-}
    
 
   function draw(){
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+    collisionDetection();
      drawBall();
      drawPaddle();
      drawBricks();
-     collisionDetection();
      if(x + dx > canvas.width - ballRadious || x + dx < ballRadious){
          dx = -dx;
          ballColor= '#' + Math.floor(Math.random()*16777215).toString(16);
@@ -134,7 +136,6 @@
      else if(y + dy > canvas.height - ballRadious){
          if( x > paddleX && x < paddleX + paddleWidth){
              dy = -dy
-             ballColor= '#' + Math.floor(Math.random()*16777215).toString(16);
          }
          else{
              alert("Gra skończona!")
